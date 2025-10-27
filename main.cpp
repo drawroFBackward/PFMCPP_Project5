@@ -87,11 +87,19 @@ struct CoffeeMaker
     void receiveCoffeeRequest(int amountOfWater, int amountOfCoffeeBeanX, int amountOfCoffeeBeanY);
     void requestForRefill();
     void makeDefaultCoffee();
+    ~CoffeeMaker();
 };
 
 CoffeeMaker::CoffeeMaker()
 {
     std::cout << "CoffeeMaker being constructed!" << std::endl;
+}
+
+CoffeeMaker::~CoffeeMaker()
+{
+    std::cout << "CoffeeMaker being destructed!" << std::endl;
+	std::cout << "Leftover water: " << water << std::endl;
+	std::cout << "Leftover Coffee Beans : X = " << coffeeBeanX << ", Y = " << coffeeBeanY << std::endl;
 }
 
 void CoffeeMaker::makeCoffee(int amountOfWater, int amountOfCoffeeBeanX, int amountOfCoffeeBeanY)
@@ -156,11 +164,21 @@ struct FireAlarmSystem
     void soundAlarm(std::string announcement);
     void alertFireDepartment(int phoneLine);
     void putOutFire();
+	~FireAlarmSystem();
 };
 
 FireAlarmSystem::FireAlarmSystem() : smokeLevel(20.0)
 {
     std::cout << "FireAlarmSystem being constructed!" << std::endl;
+}
+
+FireAlarmSystem::~FireAlarmSystem()
+{
+    std::cout << "FireAlarmSystem being destructed!" << std::endl;
+    if (detectFire())
+    {
+        std::cout << "Fire was not put out before system shutdown!" << std::endl;
+    }
 }
 
 bool FireAlarmSystem::detectFire()
@@ -204,7 +222,7 @@ void FireAlarmSystem::putOutFire()
  */
 struct Keyboard
 {
-    Keyboard();
+    Keyboard()
     int numberOfKeys = 88;
     int volume = 100;
     std::string mode = "Acoustic";
@@ -313,8 +331,8 @@ struct Kitchen
     Kitchen();
     CoffeeMaker coffeeMaker;
     FireAlarmSystem fireAlarmSystem;
-    void startMorningRoutine();
-	void emergencyProtocol();
+	void prepareBreakfast();
+	void emergencyShutdown();
 };
 /*
  new UDT 5:
@@ -325,8 +343,8 @@ struct House
     House();
     Keyboard keyboard;
     Kitchen kitchen;
-    void relax();
-	void dailyChores();
+	void prepareForParty();
+	void startMusicSession();
 };
 /*
  MAKE SURE YOU ARE NOT ON THE MASTER BRANCH
