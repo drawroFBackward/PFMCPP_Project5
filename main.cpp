@@ -70,7 +70,7 @@ write 3 UDTs below that EACH have:
  You will use those in Part 3 of this project.
 
  */
-
+#include <iostream>
 /*
  copied UDT 1:
  */
@@ -222,7 +222,7 @@ void FireAlarmSystem::putOutFire()
  */
 struct Keyboard
 {
-    Keyboard()
+    Keyboard();
     int numberOfKeys = 88;
     int volume = 100;
     std::string mode = "Acoustic";
@@ -230,7 +230,7 @@ struct Keyboard
     bool pedal = false;
     struct Key
     {
-        Key();
+        Key(char keyName);
         char name;
         bool isPressed;
         float frequency;
@@ -240,13 +240,15 @@ struct Keyboard
         void stopKey();
         void tuneKey(float newTuning);
         void playTremolo();
+		~Key();
     };
     void playSound(Key key);
     void changeMode(std::string newMode);
     void displayMode();
     void playMelody();
+	~Keyboard();
 
-    Key key_1;
+	Key key_1 = Key('C'), key_2 = Key('D'), key_3 = Key('E'), key_4 = Key('F'), key_5 = Key('G');
 };
 
 Keyboard::Keyboard()
@@ -254,9 +256,20 @@ Keyboard::Keyboard()
     std::cout << "Keyboard being constructed!" << std::endl;
 }
 
-Keyboard::Key::Key() : name('C'), isPressed(false), frequency(261.63f), isBlackKey(false), tuning(0.0f)
+Keyboard::~Keyboard()
 {
+    std::cout << "Keyboard being destructed!" << std::endl;
+}
+
+Keyboard::Key::Key(char keyName) : isPressed(false), frequency(261.63f), isBlackKey(false), tuning(0.0f)
+{
+	name = keyName;
     std::cout << "Key being constructed!" << std::endl;
+}
+
+Keyboard::Key::~Key()
+{
+    std::cout << "Key being destructed!" << std::endl;
 }
 
 void Keyboard::Key::playKey(int time)
@@ -331,9 +344,38 @@ struct Kitchen
     Kitchen();
     CoffeeMaker coffeeMaker;
     FireAlarmSystem fireAlarmSystem;
-	void prepareBreakfast();
+	void prepareBreakfast(int numberOfPeople);
 	void emergencyShutdown();
+	~Kitchen();
 };
+
+Kitchen::Kitchen()
+{
+    std::cout << "Kitchen being constructed!" << std::endl;
+}
+
+Kitchen::~Kitchen()
+{
+    std::cout << "Kitchen being destructed!" << std::endl;
+}
+
+void Kitchen::prepareBreakfast(int numberOfPeople)
+{
+    for (int i = 0; i < numberOfPeople; ++i)
+    {
+        coffeeMaker.makeDefaultCoffee();
+	}
+}
+
+void Kitchen::emergencyShutdown()
+{
+    if (fireAlarmSystem.detectFire())
+    {
+		fireAlarmSystem.soundAlarm("Emergency! Fire detected in the kitchen!");
+		fireAlarmSystem.alertFireDepartment(911);
+        fireAlarmSystem.putOutFire();
+	}
+}
 /*
  new UDT 5:
  with 2 member functions
@@ -343,9 +385,43 @@ struct House
     House();
     Keyboard keyboard;
     Kitchen kitchen;
-	void prepareForParty();
+	void partyTime(int numberOfPeople, int hours);
 	void startMusicSession();
+	~House();
 };
+
+House::House()
+{
+    std::cout << "House being constructed!" << std::endl;
+}
+
+House::~House()
+{
+    std::cout << "House being destructed!" << std::endl;
+}
+
+void House::partyTime(int numberOfPeople, int hours)
+{
+	for (int i = 0; i < hours; ++i)
+    {
+        std::cout << "Hour " << i + 1 << " of the party!" << std::endl;
+        kitchen.prepareBreakfast(numberOfPeople);
+		keyboard.playMelody();
+	}
+	std::cout << "Party is over!" << std::endl;
+}
+
+void House::startMusicSession()
+{
+    keyboard.changeMode("Acoustic");
+	keyboard.playSound(keyboard.key_1);
+	keyboard.playSound(keyboard.key_2);
+	//kinda wanted to do the below, but think it will be covered in later projects
+	//for (int i = 1; i < 6; ++i)
+    //{
+	//	keyboard.playSound(keyboard.("key_" + std::to_string(i)));
+	//}
+}
 /*
  MAKE SURE YOU ARE NOT ON THE MASTER BRANCH
 
@@ -360,8 +436,17 @@ struct House
  Wait for my code review.
  */
 
-#include <iostream>
 int main()
 {
+	Kitchen myKitchen;
+
+	House myHouse;
+
+	myHouse.partyTime(3, 2);
+
+	myHouse.startMusicSession();
+
+	myKitchen.emergencyShutdown();
+
     std::cout << "good to go!" << std::endl;
 }
