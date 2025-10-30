@@ -93,6 +93,7 @@ struct CoffeeMaker
     void requestForRefill();
     void makeDefaultCoffee();
     ~CoffeeMaker();
+	void printCurrentIngredients();
 };
 
 CoffeeMaker::CoffeeMaker()
@@ -153,6 +154,11 @@ void CoffeeMaker::makeDefaultCoffee()
         }
         std::cout << "finished making coffee" << std::endl;
     }
+}
+
+void CoffeeMaker::printCurrentIngredients()
+{
+    std::cout << "Current water: " << this->water << ", Coffee Beans: X = " << this->coffeeBeanX << ", Y = " << this->coffeeBeanY << std::endl;
 }
 /*
  copied UDT 2:
@@ -282,7 +288,7 @@ void Keyboard::Key::playKey(int time)
     if (!isPressed)
     {
         isPressed = true;
-        std::cout << "Playing key: " << name << " with frequency: " << frequency + tuning << " Hz for" << time << "seconds" << std::endl;
+        std::cout << "Playing key: " << this->name << " with frequency: " << this->frequency + this->tuning << " Hz for" << time << "seconds" << std::endl;
     }
 }
 
@@ -290,7 +296,7 @@ void Keyboard::Key::stopKey()
 {
     if (isPressed)
     {
-        std::cout << "Stopping key: " << name << std::endl;
+        std::cout << "Stopping key: " << this->name << std::endl;
         isPressed = false;
     }
 }
@@ -447,11 +453,25 @@ int main()
 
 	House myHouse;
 
-	myHouse.partyTime(3, 2);
+	//myHouse.partyTime(3, 2);
 
-	myHouse.startMusicSession();
+	//myHouse.startMusicSession();
 
-	myKitchen.emergencyShutdown();
+	//myKitchen.emergencyShutdown();
+
+	myHouse.keyboard.key_1.playKey(1);
+
+	myHouse.keyboard.key_1.stopKey();
+
+    std::cout << "Playing key: " << myHouse.keyboard.key_1.name << " with frequency: " << (myHouse.keyboard.key_1.frequency + myHouse.keyboard.key_1.tuning) << " Hz for" << 1 << "seconds" << std::endl;
+
+	std::cout << "Stopping key: " << myHouse.keyboard.key_1.name << std::endl;
+
+	CoffeeMaker cm;
+
+	cm.printCurrentIngredients();
+
+	std::cout << "Current water: " << cm.water << ", Coffee Beans: X = " << cm.coffeeBeanX << ", Y = " << cm.coffeeBeanY << std::endl;
 
     std::cout << "good to go!" << std::endl;
 }
