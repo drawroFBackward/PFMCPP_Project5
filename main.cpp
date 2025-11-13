@@ -80,6 +80,7 @@ void Axe::aConstMemberFunction() const { }
 
 
 #include <iostream>
+#include <LeakedObjectDetector.h>
 /*
  copied UDT 1:
  */
