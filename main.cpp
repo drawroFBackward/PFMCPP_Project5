@@ -99,6 +99,7 @@ struct CoffeeMaker
     void makeDefaultCoffee();
     ~CoffeeMaker();
 	void printCurrentIngredients();
+	JUCE_LEAK_DETECTOR(CoffeeMaker)
 };
 
 CoffeeMaker::CoffeeMaker()
@@ -181,6 +182,7 @@ struct FireAlarmSystem
     void alertFireDepartment(int phoneLine);
     void putOutFire();
 	~FireAlarmSystem();
+	JUCE_LEAK_DETECTOR(FireAlarmSystem)
 };
 
 FireAlarmSystem::FireAlarmSystem() : smokeLevel(20.0)
@@ -257,13 +259,14 @@ struct Keyboard
         void tuneKey(float newTuning);
         void playTremolo();
 		~Key();
+		JUCE_LEAK_DETECTOR(Key)
     };
     void playSound(Key key);
     void changeMode(std::string newMode);
     void displayMode();
     void playMelody();
 	~Keyboard();
-
+	JUCE_LEAK_DETECTOR(Keyboard)
 	Key key_1 = Key('C'), key_2 = Key('D'), key_3 = Key('E'), key_4 = Key('F'), key_5 = Key('G');
 };
 
@@ -363,6 +366,7 @@ struct Kitchen
 	void prepareBreakfast(int numberOfPeople);
 	void emergencyShutdown();
 	~Kitchen();
+	JUCE_LEAK_DETECTOR(Kitchen)
 };
 
 Kitchen::Kitchen()
@@ -404,6 +408,7 @@ struct House
 	void partyTime(int numberOfPeople, int hours);
 	void startMusicSession();
 	~House();
+	JUCE_LEAK_DETECTOR(House)
 };
 
 House::House()
@@ -451,6 +456,43 @@ void House::startMusicSession()
 
  Wait for my code review.
  */
+
+ // writing Wrapper classes for each UDT
+
+struct WrapperCoffeeMaker
+{
+    WrapperCoffeeMaker() : cmPtr(new CoffeeMaker()) {}
+    ~WrapperCoffeeMaker() { delete cmPtr; }
+    CoffeeMaker* cmPtr = nullptr;
+};
+
+struct WrapperFireAlarmSystem
+{
+    WrapperFireAlarmSystem() : fasPtr(new FireAlarmSystem()) {}
+    ~WrapperFireAlarmSystem() { delete fasPtr; }
+    FireAlarmSystem* fasPtr = nullptr;
+};
+
+struct WrapperKeyboard
+{
+    WrapperKeyboard() : kbPtr(new Keyboard()) {}
+    ~WrapperKeyboard() { delete kbPtr; }
+    Keyboard* kbPtr = nullptr;
+};
+
+struct WrapperKitchen
+{
+    WrapperKitchen() : kPtr(new Kitchen()) {}
+    ~WrapperKitchen() { delete kPtr; }
+    Kitchen* kPtr = nullptr;
+};
+
+struct WrapperHouse
+{
+    WrapperHouse() : hPtr(new House()) {}
+    ~WrapperHouse() { delete hPtr; }
+    House* hPtr = nullptr;
+};
 
 int main()
 {
