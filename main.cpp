@@ -80,7 +80,8 @@ void Axe::aConstMemberFunction() const { }
 
 
 #include <iostream>
-#include <LeakedObjectDetector.h>
+#include <string>
+#include "LeakedObjectDetector.h"
 /*
  copied UDT 1:
  */
@@ -261,7 +262,7 @@ struct Keyboard
 		~Key();
 		JUCE_LEAK_DETECTOR(Key)
     };
-    void playSound(Key key);
+    void playSound(Key& key);
     void changeMode(std::string newMode);
     void displayMode();
     void playMelody();
@@ -323,7 +324,7 @@ void Keyboard::Key::playTremolo()
     }
 }//had no clue this was what it was called XD
 
-void Keyboard::playSound(Key key)
+void Keyboard::playSound(Key& key)
 {
     if (mode == "Acoustic" && pedal)
     {
@@ -496,29 +497,29 @@ struct WrapperHouse
 
 int main()
 {
-	Kitchen myKitchen;
+	WrapperKitchen myKitchen;
 
-	House myHouse;
+	WrapperHouse myHouse;
 
-	//myHouse.partyTime(3, 2);
+	myHouse.hPtr->partyTime(3, 2);
 
-	//myHouse.startMusicSession();
+	myHouse.hPtr->startMusicSession();
 
-	//myKitchen.emergencyShutdown();
+	myKitchen.kPtr->emergencyShutdown();
 
-	myHouse.keyboard.key_1.playKey(1);
+	myHouse.hPtr->keyboard.key_1.playKey(1);
 
-	myHouse.keyboard.key_1.stopKey();
+	myHouse.hPtr->keyboard.key_1.stopKey();
 
-    std::cout << "Playing key: " << myHouse.keyboard.key_1.name << " with frequency: " << (myHouse.keyboard.key_1.frequency + myHouse.keyboard.key_1.tuning) << " Hz for" << 1 << "seconds" << std::endl;
+    std::cout << "Playing key: " << myHouse.hPtr->keyboard.key_1.name << " with frequency: " << (myHouse.hPtr->keyboard.key_1.frequency + myHouse.hPtr->keyboard.key_1.tuning) << " Hz for" << 1 << "seconds" << std::endl;
 
-	std::cout << "Stopping key: " << myHouse.keyboard.key_1.name << std::endl;
+	std::cout << "Stopping key: " << myHouse.hPtr->keyboard.key_1.name << std::endl;
 
-	CoffeeMaker cm;
+	WrapperCoffeeMaker cm;
 
-	cm.printCurrentIngredients();
+	cm.cmPtr->printCurrentIngredients();
 
-	std::cout << "Current water: " << cm.water << ", Coffee Beans: X = " << cm.coffeeBeanX << ", Y = " << cm.coffeeBeanY << std::endl;
+	std::cout << "Current water: " << cm.cmPtr->water << ", Coffee Beans: X = " << cm.cmPtr->coffeeBeanX << ", Y = " << cm.cmPtr->coffeeBeanY << std::endl;
 
     std::cout << "good to go!" << std::endl;
 }
