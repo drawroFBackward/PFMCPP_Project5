@@ -80,6 +80,8 @@ void Axe::aConstMemberFunction() const { }
 
 
 #include <iostream>
+#include <string>
+#include "LeakedObjectDetector.h"
 /*
  copied UDT 1:
  */
@@ -98,6 +100,7 @@ struct CoffeeMaker
     void makeDefaultCoffee();
     ~CoffeeMaker();
 	void printCurrentIngredients();
+	JUCE_LEAK_DETECTOR(CoffeeMaker)
 };
 
 CoffeeMaker::CoffeeMaker()
@@ -180,6 +183,7 @@ struct FireAlarmSystem
     void alertFireDepartment(int phoneLine);
     void putOutFire();
 	~FireAlarmSystem();
+	JUCE_LEAK_DETECTOR(FireAlarmSystem)
 };
 
 FireAlarmSystem::FireAlarmSystem() : smokeLevel(20.0)
@@ -256,13 +260,14 @@ struct Keyboard
         void tuneKey(float newTuning);
         void playTremolo();
 		~Key();
+		JUCE_LEAK_DETECTOR(Key)
     };
-    void playSound(Key key);
+    void playSound(Key& key);
     void changeMode(std::string newMode);
     void displayMode();
     void playMelody();
 	~Keyboard();
-
+	JUCE_LEAK_DETECTOR(Keyboard)
 	Key key_1 = Key('C'), key_2 = Key('D'), key_3 = Key('E'), key_4 = Key('F'), key_5 = Key('G');
 };
 
@@ -319,7 +324,7 @@ void Keyboard::Key::playTremolo()
     }
 }//had no clue this was what it was called XD
 
-void Keyboard::playSound(Key key)
+void Keyboard::playSound(Key& key)
 {
     if (mode == "Acoustic" && pedal)
     {
@@ -362,6 +367,7 @@ struct Kitchen
 	void prepareBreakfast(int numberOfPeople);
 	void emergencyShutdown();
 	~Kitchen();
+	JUCE_LEAK_DETECTOR(Kitchen)
 };
 
 Kitchen::Kitchen()
@@ -403,6 +409,7 @@ struct House
 	void partyTime(int numberOfPeople, int hours);
 	void startMusicSession();
 	~House();
+	JUCE_LEAK_DETECTOR(House)
 };
 
 House::House()
@@ -451,31 +458,68 @@ void House::startMusicSession()
  Wait for my code review.
  */
 
+ // writing Wrapper classes for each UDT
+
+struct WrapperCoffeeMaker
+{
+    WrapperCoffeeMaker() : cmPtr(new CoffeeMaker()) {}
+    ~WrapperCoffeeMaker() { delete cmPtr; }
+    CoffeeMaker* cmPtr = nullptr;
+};
+
+struct WrapperFireAlarmSystem
+{
+    WrapperFireAlarmSystem() : fasPtr(new FireAlarmSystem()) {}
+    ~WrapperFireAlarmSystem() { delete fasPtr; }
+    FireAlarmSystem* fasPtr = nullptr;
+};
+
+struct WrapperKeyboard
+{
+    WrapperKeyboard() : kbPtr(new Keyboard()) {}
+    ~WrapperKeyboard() { delete kbPtr; }
+    Keyboard* kbPtr = nullptr;
+};
+
+struct WrapperKitchen
+{
+    WrapperKitchen() : kPtr(new Kitchen()) {}
+    ~WrapperKitchen() { delete kPtr; }
+    Kitchen* kPtr = nullptr;
+};
+
+struct WrapperHouse
+{
+    WrapperHouse() : hPtr(new House()) {}
+    ~WrapperHouse() { delete hPtr; }
+    House* hPtr = nullptr;
+};
+
 int main()
 {
-	Kitchen myKitchen;
+	WrapperKitchen myKitchen;
 
-	House myHouse;
+	WrapperHouse myHouse;
 
-	//myHouse.partyTime(3, 2);
+	myHouse.hPtr->partyTime(3, 2);
 
-	//myHouse.startMusicSession();
+	myHouse.hPtr->startMusicSession();
 
-	//myKitchen.emergencyShutdown();
+	myKitchen.kPtr->emergencyShutdown();
 
-	myHouse.keyboard.key_1.playKey(1);
+	myHouse.hPtr->keyboard.key_1.playKey(1);
 
-	myHouse.keyboard.key_1.stopKey();
+	myHouse.hPtr->keyboard.key_1.stopKey();
 
-    std::cout << "Playing key: " << myHouse.keyboard.key_1.name << " with frequency: " << (myHouse.keyboard.key_1.frequency + myHouse.keyboard.key_1.tuning) << " Hz for" << 1 << "seconds" << std::endl;
+    std::cout << "Playing key: " << myHouse.hPtr->keyboard.key_1.name << " with frequency: " << (myHouse.hPtr->keyboard.key_1.frequency + myHouse.hPtr->keyboard.key_1.tuning) << " Hz for" << 1 << "seconds" << std::endl;
 
-	std::cout << "Stopping key: " << myHouse.keyboard.key_1.name << std::endl;
+	std::cout << "Stopping key: " << myHouse.hPtr->keyboard.key_1.name << std::endl;
 
-	CoffeeMaker cm;
+	WrapperCoffeeMaker cm;
 
-	cm.printCurrentIngredients();
+	cm.cmPtr->printCurrentIngredients();
 
-	std::cout << "Current water: " << cm.water << ", Coffee Beans: X = " << cm.coffeeBeanX << ", Y = " << cm.coffeeBeanY << std::endl;
+	std::cout << "Current water: " << cm.cmPtr->water << ", Coffee Beans: X = " << cm.cmPtr->coffeeBeanX << ", Y = " << cm.cmPtr->coffeeBeanY << std::endl;
 
     std::cout << "good to go!" << std::endl;
 }
