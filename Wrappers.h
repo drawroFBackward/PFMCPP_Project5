@@ -1,7 +1,6 @@
 #pragma once
 #include <iostream>
-
-struct CoffeeMaker;
+#include "House.h"
 
 struct WrapperCoffeeMaker
 {
@@ -10,16 +9,12 @@ struct WrapperCoffeeMaker
     CoffeeMaker* cmPtr = nullptr;
 };
 
-struct FireAlarmSystem;
-
 struct WrapperFireAlarmSystem
 {
     WrapperFireAlarmSystem();
     ~WrapperFireAlarmSystem();
     FireAlarmSystem* fasPtr = nullptr;
 };
-
-struct Keyboard;
 
 struct WrapperKeyboard
 {
@@ -28,16 +23,12 @@ struct WrapperKeyboard
     Keyboard* kbPtr = nullptr;
 };
 
-struct Kitchen;
-
 struct WrapperKitchen
 {
     WrapperKitchen();
     ~WrapperKitchen();
     Kitchen* kPtr = nullptr;
 };
-
-struct House;
 
 struct WrapperHouse
 {
