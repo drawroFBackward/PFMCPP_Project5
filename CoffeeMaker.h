@@ -1,3 +1,6 @@
+#pragma once
+#include <iostream>
+
 struct CoffeeMaker
 {
     CoffeeMaker();
