@@ -63,7 +63,6 @@ void Axe::aConstMemberFunction() const {}
 
 
 
-#pragma once
 #include <iostream>
 #include <string>
 #include "LeakedObjectDetector.h"
