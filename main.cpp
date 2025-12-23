@@ -63,167 +63,14 @@ void Axe::aConstMemberFunction() const {}
 
 
 
-
+#pragma once
 #include <iostream>
 #include <string>
 #include "LeakedObjectDetector.h"
-/*
- copied UDT 1:
- */
-struct CoffeeMaker
-{
-    CoffeeMaker();
-    int water = 100;
-    int coffeeBeanX = 10;
-    int coffeeBeanY = 10;
-    int coffeeAmount = 0;
-    std::string interface = "Touchscreen";
-    int timer = 10;
-    void makeCoffee(int amountOfWater, int amountOfCoffeeBeanX, int amountOfCoffeeBeanY);
-    void receiveCoffeeRequest(int amountOfWater, int amountOfCoffeeBeanX, int amountOfCoffeeBeanY);
-    void requestForRefill();
-    void makeDefaultCoffee();
-    ~CoffeeMaker();
-	void printCurrentIngredients();
-	JUCE_LEAK_DETECTOR(CoffeeMaker)
-};
+#include "CoffeeMaker.h"
+#include "FireAlarmSystem.h"
 
-CoffeeMaker::CoffeeMaker()
-{
-    std::cout << "CoffeeMaker being constructed!" << std::endl;
-}
 
-CoffeeMaker::~CoffeeMaker()
-{
-    std::cout << "CoffeeMaker being destructed!" << std::endl;
-	std::cout << "Leftover water: " << water << std::endl;
-	std::cout << "Leftover Coffee Beans : X = " << coffeeBeanX << ", Y = " << coffeeBeanY << std::endl;
-}
-
-void CoffeeMaker::makeCoffee(int amountOfWater, int amountOfCoffeeBeanX, int amountOfCoffeeBeanY)
-{
-    coffeeAmount += ((amountOfWater / 10) + (amountOfCoffeeBeanX + amountOfCoffeeBeanY) / 20) * timer;
-}
-
-void CoffeeMaker::receiveCoffeeRequest(int amountOfWater, int amountOfCoffeeBeanX, int amountOfCoffeeBeanY)
-{
-    if (amountOfWater > 0 && amountOfCoffeeBeanX > 0 && amountOfCoffeeBeanY > 0)
-    {
-        std::cout << "Coffee request received." << std::endl;
-        makeCoffee(amountOfWater, amountOfCoffeeBeanX, amountOfCoffeeBeanY);
-    }
-    else
-    {
-        requestForRefill();
-    }
-}
-
-void CoffeeMaker::requestForRefill()
-{
-    std::cout << "Refill ingredients." << std::endl;
-}
-
-void CoffeeMaker::makeDefaultCoffee()
-{
-    for (int i = 0; i < timer; ++i)
-    {
-        std::cout << "Making coffee" << std::endl;
-        std::cout << "time left till coffee is ready = " << timer - i << std::endl;
-        coffeeAmount += 3;
-        --water;
-        --coffeeBeanY;
-        --coffeeBeanX;
-        std::cout << "current coffee amount = " << coffeeAmount << std::endl;
-
-        if (water == 0 || coffeeBeanX == 0 || coffeeBeanY == 0)
-        {
-            if (i == timer)
-            {
-                std::cout << "finished making coffee" << std::endl;
-            }
-            std::cout << "out of ingredients" << std::endl;
-            return;
-        }
-        std::cout << "finished making coffee" << std::endl;
-    }
-}
-
-void CoffeeMaker::printCurrentIngredients()
-{
-    std::cout << "Current water: " << this->water << ", Coffee Beans: X = " << this->coffeeBeanX << ", Y = " << this->coffeeBeanY << std::endl;
-}
-/*
- copied UDT 2:
- */
-struct FireAlarmSystem
-{
-    FireAlarmSystem();
-    std::string smokeDetector = "Siemens";
-    std::string speaker = "There's a fire";
-    int serialNumber = 1;
-    std::string camera = "Canon";
-    double smokeLevel;
-    bool detectFire();
-    void soundAlarm(std::string announcement);
-    void alertFireDepartment(int phoneLine);
-    void putOutFire();
-	~FireAlarmSystem();
-	JUCE_LEAK_DETECTOR(FireAlarmSystem)
-};
-
-FireAlarmSystem::FireAlarmSystem() : smokeLevel(20.0)
-{
-    std::cout << "FireAlarmSystem being constructed!" << std::endl;
-}
-
-FireAlarmSystem::~FireAlarmSystem()
-{
-    std::cout << "FireAlarmSystem being destructed!" << std::endl;
-    if (detectFire())
-    {
-        std::cout << "Fire was not put out before system shutdown!" << std::endl;
-    }
-}
-
-bool FireAlarmSystem::detectFire()
-{
-    return smokeDetector == "Siemens" && smokeLevel > 50.0;
-}
-
-void FireAlarmSystem::soundAlarm(std::string announcement)
-{
-    if (detectFire())
-    {
-        std::cout << announcement << std::endl;
-    }
-}
-
-void FireAlarmSystem::alertFireDepartment(int phoneLine)
-{
-    if (detectFire() && phoneLine > 0 && camera == "Canon")
-    {
-        std::cout << "Alerting fire department." << std::endl;
-        // pretend to send camera footage and call fire department eg. callFireDept(phoneLine); sendFootage(camera, phoneLine);
-    }
-}
-
-void FireAlarmSystem::putOutFire()
-{
-    while (detectFire())
-    {
-        smokeLevel -= 10.0;
-        std::cout << "Putting out fire, current smoke level: " << smokeLevel << std::endl;
-        if (smokeLevel <= 0.0)
-        {
-            std::cout << "Fire put out!" << std::endl;
-            smokeLevel = 0.0;
-            return;
-        }
-    }
-}
-/*
- copied UDT 3:
- */
 struct Keyboard
 {
     Keyboard();
@@ -340,10 +187,7 @@ void Keyboard::playMelody()
         std::cout << "Playing note: " << melody[i] << std::endl;
     }
 }
-/*
- new UDT 4:
- with 2 member functions
- */
+
 struct Kitchen
 {
     Kitchen();
@@ -382,10 +226,7 @@ void Kitchen::emergencyShutdown()
         fireAlarmSystem.putOutFire();
 	}
 }
-/*
- new UDT 5:
- with 2 member functions
- */
+
 struct House
 {
     House();
@@ -445,19 +286,9 @@ void House::startMusicSession()
 
  // writing Wrapper classes for each UDT
 
-struct WrapperCoffeeMaker
-{
-    WrapperCoffeeMaker() : cmPtr(new CoffeeMaker()) {}
-    ~WrapperCoffeeMaker() { delete cmPtr; }
-    CoffeeMaker* cmPtr = nullptr;
-};
 
-struct WrapperFireAlarmSystem
-{
-    WrapperFireAlarmSystem() : fasPtr(new FireAlarmSystem()) {}
-    ~WrapperFireAlarmSystem() { delete fasPtr; }
-    FireAlarmSystem* fasPtr = nullptr;
-};
+
+
 
 struct WrapperKeyboard
 {
