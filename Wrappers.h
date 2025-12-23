@@ -1,12 +1,16 @@
 #pragma once
 #include <iostream>
 
+struct CoffeeMaker;
+
 struct WrapperCoffeeMaker
 {
     WrapperCoffeeMaker();
     ~WrapperCoffeeMaker();
     CoffeeMaker* cmPtr = nullptr;
 };
+
+struct FireAlarmSystem;
 
 struct WrapperFireAlarmSystem
 {
@@ -15,6 +19,8 @@ struct WrapperFireAlarmSystem
     FireAlarmSystem* fasPtr = nullptr;
 };
 
+struct Keyboard;
+
 struct WrapperKeyboard
 {
     WrapperKeyboard();
@@ -22,12 +28,16 @@ struct WrapperKeyboard
     Keyboard* kbPtr = nullptr;
 };
 
+struct Kitchen;
+
 struct WrapperKitchen
 {
     WrapperKitchen();
     ~WrapperKitchen();
     Kitchen* kPtr = nullptr;
 };
+
+struct House;
 
 struct WrapperHouse
 {

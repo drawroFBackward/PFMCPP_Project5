@@ -1,5 +1,4 @@
 #pragma once
-#include "Wrappers.h"
 /*
 #include "CoffeeMaker.h"
 #include "FireAlarmSystem.h"
@@ -7,6 +6,7 @@
 #include "Kitchen.h"
 */
 #include "House.h"
+#include "Wrappers.h"
 
 WrapperCoffeeMaker::WrapperCoffeeMaker() : cmPtr(new CoffeeMaker()) {}
 WrapperCoffeeMaker::~WrapperCoffeeMaker() { delete cmPtr; }
