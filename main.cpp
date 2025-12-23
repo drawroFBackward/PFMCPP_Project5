@@ -68,6 +68,9 @@ void Axe::aConstMemberFunction() const {}
 #include "LeakedObjectDetector.h"
 #include "Wrappers.h"
 
+//still need to do step 8 (const checks) on all files. leaving incomplete for now.
+//the purpose of this and the above comment is to remind myself to finish step 8 later before submission.
+
 int main()
 {
 	WrapperKitchen myKitchen;
